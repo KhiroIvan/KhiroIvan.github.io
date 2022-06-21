@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-
+    <link rel="stylesheet" href="css/homework1.css"/>
 </head>
 
 <body>
