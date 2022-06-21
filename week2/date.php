@@ -24,8 +24,7 @@
             echo date("M Y");
             ?>
         </div>
-    </div>
-    <!--the end of starting-->
+    </div> <!--the end of starting-->
     <br />
 
     <div id="middle">
@@ -40,8 +39,7 @@
             echo date("M Y");
             ?>
         </div>
-    </div>
-    <!--the end of middle-->
+    </div> <!--the end of middle-->
     
 
     <div id="last">
@@ -61,10 +59,9 @@
             ?>
 
         </div>
-    </div>
-    <!--the end of last-->
+    </div> <!--the end of last-->
 
-    </div><!--the end of container-->
+    </div> <!--the end of container-->
 
 </body>
 

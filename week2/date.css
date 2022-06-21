@@ -4,6 +4,70 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-    color: red;
 }
 
+#container {
+    display: flex;
+    justify-content: center;
+    padding: 20%;
+}
+
+#starting {
+    justify-content: center;
+    margin: 0 100px;
+}
+
+.first {
+    border-bottom: solid 2px black;
+    width: 100%;
+    font-size: 90px;
+}
+
+.second {
+    text-align: center;
+    font-size: 15px;
+}
+
+#middle {
+    justify-content: center;
+    margin: 0 100px;
+}
+
+.third {
+    border: solid 2px black;
+    font-size: 100px;
+    width: 100%;
+    text-align: center;
+}
+
+.fourth {
+    background-color: black;
+    color: white;
+    padding: 6px;
+    width: 92.2%;
+    text-align: center;
+    font-size: 14px;
+}
+
+#last {
+    justify-content: center;
+    display: flex;
+    margin: 0 100px;
+}
+
+.fifth {
+    font-size: 90px;
+}
+
+.sixth {
+    font-size: 15px;
+    padding: 15px 0 0 0;
+}
+
+@media(max-width:400px) {
+    #container {
+        width: 50%;
+        justify-content: center;
+        padding: 20%;
+    }
+}
