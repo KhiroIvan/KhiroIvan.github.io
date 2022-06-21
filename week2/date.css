@@ -68,12 +68,7 @@
 }
 
 @media(max-width:500px) {
-    #container {
-        width: 50%;
-        justify-content: center;
-        padding: 20%;
-		float: left;
-    }
+
         .starting {
             padding: 15vh 0 0 0;
             display: inline-block;
