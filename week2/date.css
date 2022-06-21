@@ -15,6 +15,7 @@
 #starting {
     justify-content: center;
     margin: 0 100px;
+	padding-top: 1.5vh;
 }
 
 .first {
@@ -35,24 +36,26 @@
 
 .third {
     border: solid 2px black;
-    font-size: 100px;
+    font-size: 90px;
     width: 100%;
     text-align: center;
+	padding: 1.5vh;
 }
 
 .fourth {
     background-color: black;
     color: white;
     padding: 6px;
-    width: 92.2%;
+    width: 100%;
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
 }
 
 #last {
     justify-content: center;
     display: flex;
     margin: 0 100px;
+	padding-top: 1.5vh;
 }
 
 .fifth {
@@ -64,10 +67,11 @@
     padding: 15px 0 0 0;
 }
 
-@media(max-width:400px) {
+@media(max-width:500px) {
     #container {
         width: 50%;
         justify-content: center;
         padding: 20%;
+		float: left;
     }
 }
