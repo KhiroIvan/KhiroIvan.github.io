@@ -74,4 +74,26 @@
         padding: 20%;
 		float: left;
     }
+        .starting {
+            padding: 15vh 0 0 0;
+            display: inline-block;
+            width: 100vw;
+            height: auto;
+            text-align: center;
+        }
+        .middle {
+            padding: 25vh 0 0 0;
+            display: inline-block;
+            width: 100vw;
+            height: auto;
+            text-align: center;
+        }
+        .last {
+            padding: 25vh 0 0 0;
+            display: inline-block;
+            width: 100vw;
+            height: auto;
+            text-align: center;
+        }
+
 }
