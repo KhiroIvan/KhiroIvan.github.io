@@ -5,8 +5,12 @@
 <?php
 for ($x = 0; $x <= 100; $x++) {
     if ($x % 2 == 0) {
-        echo "<br>";
+        echo "<b>$x</b>";
+    } else {
+        echo "$x";
+        $style = "color:red";
     }
+    echo "<br>";
 }
 ?>
 
