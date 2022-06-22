@@ -7,8 +7,7 @@ for ($x = 0; $x <= 100; $x++) {
     if ($x % 2 == 0) {
         echo "<b>$x</b>";
     } else {
-        echo "$x";
-        $style = "color:red";
+        echo "<span style='color:red'> $x </span>" ;
     }
     echo "<br>";
 }
