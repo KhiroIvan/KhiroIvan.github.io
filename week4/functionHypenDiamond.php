@@ -5,12 +5,6 @@
 <body>
 <?php
 function generateStars($star,$dash) {
-    return [$star,$dash];
-  }
-  
-  [$star,$dash] = generateStars ("-","*");
-  
-  
   echo "<pre>";
   for ($i = 1; $i <= 5; $i++) {
     for ($j = $i; $j <= 5; $j++)
@@ -36,6 +30,11 @@ function generateStars($star,$dash) {
           }
       echo "<br>";
   }
+}
+
+generateStars("-","*");
+
+ 
 ?>
 
 </body>
