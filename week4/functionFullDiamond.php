@@ -3,13 +3,7 @@
 <body>
 
 <?php  
-function generateStars($onOfStar,$star) {
-    return [$onOfStar,$star];
-  }
-  
-  [$onOfStar,$star] = generateStars("7","*");
-  $mm = $onOfStar - 3;
-  
+function generateStars($mm,$star) {
   echo "<pre>";
   
   for ($i = 1; $i <= $mm; $i++) {
@@ -26,6 +20,10 @@ function generateStars($onOfStar,$star) {
           echo $star;
       echo "<br>";
   }
+}
+
+generateStars(4,"*");
+
 ?>  
 
 </body>
