@@ -7,21 +7,23 @@
 <body>
 <?php
 function generateStars($m) {
-  echo "<pre>";
+  $star = "<pre>";
   for ($x = 1; $x < $m; $x++) {
     for ($y = 0; $y < $x; $y++) {
-      echo "*";
+      $star = $star . "*";
     }
-    echo "<br>";
+    $star = $star . "<br>";
   }
   for ($x = $m; $x > 0; $x--) {
     for ($y = 0; $y < $x; $y++) {
-      echo "*";
+      $star = $star . "*";
     }
-    echo "<br>";
+    $star = $star . "<br>";
   }
+  return $star;
 }
-generateStars(6);
+$star = generateStars(6);
+echo $star;
 
 ?>
 
