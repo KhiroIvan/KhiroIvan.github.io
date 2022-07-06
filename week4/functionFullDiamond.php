@@ -7,7 +7,7 @@ function generateStars($onOfStar,$star) {
     return [$onOfStar,$star];
   }
   
-  [$onOfStar,$star] = generateStars ("7","*");
+  [$onOfStar,$star] = generateStars("7","*");
   $mm = $onOfStar - 3;
   
   echo "<pre>";
