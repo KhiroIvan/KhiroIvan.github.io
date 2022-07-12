@@ -15,11 +15,22 @@
 
         <?php
 if($_POST){
+
+    function validateDate($date, $format = 'Y-m-d')
+    {
+    $manu_date = DateTime::createFromFormat($format, $date);
+    return $manu_date && $manu_date->format($format) === $date;
+
+    $expiry_date = DateTime::createFromFormat($format, $date);
+    return $expiry_date && $expiry_date->format($format) === $date;
+    }
+
+  
     // include database connection
     include 'config/database.php';
     try{
         // insert query
-        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, created=:created";
+        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, manu_date=:manu_date, expiry_date=:expiry_date, status=:status, created=:created";
 
         // prepare query for execution
         $stmt = $con->prepare($query);
@@ -28,16 +39,33 @@ if($_POST){
         $name=htmlspecialchars(strip_tags($_POST['name']));
         $description=htmlspecialchars(strip_tags($_POST['description']));
         $price=htmlspecialchars(strip_tags($_POST['price']));
+        $manu_date=htmlspecialchars(strip_tags($_POST['manu_date']));
+        $expiry_date=htmlspecialchars(strip_tags($_POST['expiry_date']));
+        $status=htmlspecialchars(strip_tags($_POST['status']));
 
         // bind the parameters
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':description', $description);
         $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':manu_date', $manu_date);
+        $stmt->bindParam(':expiry_date', $expiry_date);
+        $stmt->bindParam(':status', $status);
 
         // specify when this record was inserted to the database
         $created=date('Y-m-d H:i:s');
         $stmt->bindParam(':created', $created);
-        
+
+        //date
+        $date1=date_create($manu_date);
+        $date2=date_create($expiry_date);
+        $diff=date_diff($date1,$date2);
+
+        if ($diff <= 0){
+            echo "error";
+        }else{
+            $exception;
+        }
+
         // Execute the query
         if($stmt->execute()){
             echo "<div class='alert alert-success'>Record was saved.</div>";
@@ -45,14 +73,16 @@ if($_POST){
             echo "<div class='alert alert-danger'>Unable to save record.</div>";
         } 
     }
+
     // show error
     catch(PDOException $exception){
         die('ERROR: ' . $exception->getMessage());
     }
+
+    
 }
+
 ?>
-
-
         <!-- html form here where the product information will be entered -->
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
@@ -68,6 +98,21 @@ if($_POST){
         <tr>
             <td>Price</td>
             <td><input type='text' name='price' class='form-control' /></td>
+        </tr>
+        <tr>
+            <td>Manufacture Date</td>
+            <td><input type='date' name='manu_date' class='form-control' /></td>
+        </tr>
+        <tr>
+            <td>Expiry Date</td>
+            <td><input type='date' name='expiry_date' class='form-control' /></td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>
+                <input type="radio" name='status' value="available"><label for="html">Available</label>&nbsp;
+                <input type="radio" name='status' value="non_available"><label for="html">Non Available</label>
+            </td>
         </tr>
         <tr>
             <td></td>
