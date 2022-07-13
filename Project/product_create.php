@@ -14,16 +14,8 @@
         <!-- html form to create product will be here -->
 
         <?php
-if($_POST){
+if(!empty($_POST)){
 
-    function validateDate($date, $format = 'Y-m-d')
-    {
-    $manu_date = DateTime::createFromFormat($format, $date);
-    return $manu_date && $manu_date->format($format) === $date;
-
-    $expiry_date = DateTime::createFromFormat($format, $date);
-    return $expiry_date && $expiry_date->format($format) === $date;
-    }
 
   
     // include database connection
@@ -79,7 +71,14 @@ if($_POST){
         die('ERROR: ' . $exception->getMessage());
     }
 
-    
+    function validateDate($date, $format = 'Y-m-d')
+    {
+    $manu_date = DateTime::createFromFormat($format, $date);
+    return $manu_date && $manu_date->format($format) === $date;
+
+    $expiry_date = DateTime::createFromFormat($format, $date);
+    return $expiry_date && $expiry_date->format($format) === $date;
+    }
 }
 
 ?>
