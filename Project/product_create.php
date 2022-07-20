@@ -96,7 +96,7 @@ function validateDate($date, $format = 'Y-n-d')
 
             $manu_date = $_POST['manu_date_year'] . "-" . $_POST['manu_date_month'] . "-" . $_POST['manu_date_day'];
             if (validateDate($manu_date) == false) {
-                echo "Manufacture selected date is not exist<br>";
+                echo "Manufacture selected date does not exist<br>";
                 $save = false;
             }
 
@@ -105,7 +105,7 @@ function validateDate($date, $format = 'Y-n-d')
 
 
             if (validateDate($expiry_date) == false) {
-                echo "Expiry selected date is not exist<br>";
+                echo "Expiry selected date does not exist<br>";
                 $save = false;
             }
 
