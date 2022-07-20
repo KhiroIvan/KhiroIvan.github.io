@@ -188,8 +188,8 @@ function validateDate($date, $format = 'Y-n-d')
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name='status' value="available"><label for="html">Available</label>&nbsp;
-                        <input type="radio" name='status' value="non_available"><label for="html">Non Available</label>
+                        <input type="radio" name='status' value="Available"><label for="html">Available</label>&nbsp;
+                        <input type="radio" name='status' value="Non_available"><label for="html">Non Available</label>
                     </td>
                 </tr>
                 <tr>
