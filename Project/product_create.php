@@ -74,6 +74,8 @@ function validateDate($date, $format = 'Y-n-d')
 
         <?php
 
+        $save = true;
+
         if (!empty($_POST)) {
 
             // posted values
@@ -143,6 +145,13 @@ function validateDate($date, $format = 'Y-n-d')
                 } else {
                     echo "<div class='alert alert-danger'>Unable to save record.</div>";
                 }
+                if ($save != false) {
+                    echo "<div class='alert alert-success'> Record was saved.</div>";
+                    echo $stmt->execute();
+                } else {
+                    echo "<div class='alert alert-danger'> Unable to save record.</div>";
+                }
+
             }
             // show error
             catch (PDOException $exception) {
