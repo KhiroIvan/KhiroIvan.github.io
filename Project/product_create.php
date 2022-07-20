@@ -140,11 +140,8 @@ function validateDate($date, $format = 'Y-n-d')
                 $created = date('Y-m-d H:i:s');
                 $stmt->bindParam(':created', $created);
                 // Execute the query
-                if (!empty($stmt->execute())) {
-                    echo "<div class='alert alert-success'>Record was saved.</div>";
-                } else {
-                    echo "<div class='alert alert-danger'>Unable to save record.</div>";
-                }
+
+            
                 if ($save != false) {
                     echo "<div class='alert alert-success'> Record was saved.</div>";
                     echo $stmt->execute();
