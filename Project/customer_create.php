@@ -68,7 +68,7 @@ function validateDate($date, $format = 'Y-n-d')
     <!-- container -->
     <div class="container">
         <div class="page-header">
-            <h1>Create Product</h1>
+            <h1>Create Customer Account</h1>
         </div>
         <!-- html form to create product will be here -->
 
@@ -82,66 +82,80 @@ function validateDate($date, $format = 'Y-n-d')
 
             $emptyMes = "";
             
-            $name = $_POST['name'];
+            $first_name = $_POST['first_name'];
 
-            if (empty($name)) {
-                $emptyMes = $emptyMes."please do not leave name empty<br>";
+            if (empty($first_name)) {
+                $emptyMes = $emptyMes."please do not leave first name empty<br>";
                 $save = false;
             }
 
-            $description = $_POST['description'];
+            $last_name = $_POST['last_name'];
 
-            $price = $_POST['price'];
-
-            if (empty($price)) {
-                $emptyMes = $emptyMes."please do not leave price empty<br>";
-                $save = false;
-            }else if (is_numeric($price)==false){
-                $emptyMes = $emptyMes."please use numbers only<br>";
+            if (empty($last_name)) {
+                $emptyMes = $emptyMes."please do not leave last name empty<br>";
                 $save = false;
             }
 
-            $manu_date = $_POST['manu_date_year'] . "-" . $_POST['manu_date_month'] . "-" . $_POST['manu_date_day'];
-            if (validateDate($manu_date) == false) {
-                $emptyMes = $emptyMes."Manufacture selected date does not exist<br>";
+            $email = $_POST['email'];
+
+            if (empty($email)) {
+                $emptyMes = $emptyMes . "please do not leave email empty<br>";
+                $save = false;
+            }elseif (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$email)) {
+                $emptyMes = "Invalid email format<br>";
                 $save = false;
             }
 
+            $passw = $_POST['passw'];
 
-            $expiry_date = $_POST['expiry_date_year'] . "-" . $_POST['expiry_date_month'] . "-" . $_POST['expiry_date_day'];
-
-
-            if (validateDate($expiry_date) == false) {
-                $emptyMes = $emptyMes."Expiry selected date does not exist<br>";
+            if (empty($passw)) {
+                $emptyMes = $emptyMes . "Please do not leave password empty<br>";
+                $save = false;
+            }elseif (strlen($passw)<=5) {
+                $emptyMes = $emptyMes . "Password format should be more than 6 character<br>";
+                $save = false;
+            }elseif (!preg_match("/[a-z]/",$passw)||!preg_match("/[A-Z]/",$passw)||!preg_match("/[1-9]/",$passw)) {
+                $emptyMes = $emptyMes . "Password must have <br>Uppercase letters [A-Z]<br>Lowercase letters [a-z] <br>Numbers [1-9]";
                 $save = false;
             }
 
-            $ManDate = date_create($manu_date);
-            $ExDate = date_create($expiry_date);
-            $x = date_diff($ManDate, $ExDate);
+            $gender = $_POST['gender'];
 
-            if ($x->format("%R%a") < 0) {
-                $emptyMes = $emptyMes."Expiry date should not earlier than manufacture date.<br>";
+            if (empty($gender)) {
+                $emptyMes = $emptyMes."please do not leave gender empty<br>";
+                $save = false;
+            }
+
+            $birth_date = $_POST['birth_date_year'] . "-" . $_POST['birth_date_month'] . "-" . $_POST['birth_date_day'];
+            if (validateDate($birth_date) == false) {
+                $emptyMes = $emptyMes."Birth selected date does not exist<br>";
                 $save = false;
             }
 
             $status = $_POST['status'];
 
+            if (empty($status)) {
+                $emptyMes = $emptyMes."please do not leave status empty<br>";
+                $save = false;
+            }
+
             // include database connection
             include 'config/database.php';
             try {
                 // insert query
-                $query = "INSERT INTO products SET name=:name, description=:description, price=:price, manu_date=:manu_date, expiry_date=:expiry_date, status=:status, created=:created";
+                $query = "INSERT INTO customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, gender=:gender, birth_date=:birth_date, status=:status, created=:created";
                 // prepare query for execution
+
                 $stmt = $con->prepare($query);
 
 
                 // bind the parameters
-                $stmt->bindParam(':name', $name);
-                $stmt->bindParam(':description', $description);
-                $stmt->bindParam(':price', $price);
-                $stmt->bindParam(':manu_date', $manu_date);
-                $stmt->bindParam(':expiry_date', $expiry_date);
+                $stmt->bindParam(':first_name', $first_name);
+                $stmt->bindParam(':last_name', $last_name);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':passw', $passw);
+                $stmt->bindParam(':gender', $gender);
+                $stmt->bindParam(':birth_date', $birth_date);
                 $stmt->bindParam(':status', $status);
                 // specify when this record was inserted to the database
                 $created = date('Y-m-d H:i:s');
@@ -166,30 +180,35 @@ function validateDate($date, $format = 'Y-n-d')
         ?>
         <!-- html form here where the product information will be entered -->
 
-        <form name="productform" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form name="customer" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
-                    <td>Name</td>
-                    <td><input type='text' name='name' class='form-control' value=$name /></td>
+                    <td>First Name</td>
+                    <td><input type='text' name='first_name' class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Description</td>
-                    <td><textarea name='description' class='form-control'></textarea></td>
+                    <td>Last Name</td>
+                    <td><input name='last_name' class='form-control'></textarea></td>
                 </tr>
                 <tr>
-                    <td>Price</td>
-                    <td><input type='text' name='price' class='form-control' /></td>
+                    <td>Email</td>
+                    <td><input type='text' name='email' class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Manufacture Date</td>
+                    <td>Password</td>
+                    <td><input type='text' name='passw' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
                     <td>
-                        <?php dropdown($sday = "", $smonth = "", $syear = "2021", $name = "manu_date"); ?>
+                        <input type="radio" name='gender' value="male"><label for="html">Male</label>&nbsp;
+                        <input type="radio" name='gender' value="female"><label for="html">Female</label>
                     </td>
                 </tr>
                 <tr>
-                    <td>Expiry Date</td>
+                    <td>Birth Date</td>
                     <td>
-                        <?php dropdown($sday = "", $smonth = "", $syear = "", $name = "expiry_date"); ?>
+                        <?php dropdown($sday = "", $smonth = "", $syear = "2021", $name = "birth_date"); ?>
                     </td>
                 </tr>
                 <tr>
@@ -203,7 +222,7 @@ function validateDate($date, $format = 'Y-n-d')
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                        <a href='index.php' class='btn btn-danger'>Back to read customers</a>
                     </td>
                 </tr>
             </table>

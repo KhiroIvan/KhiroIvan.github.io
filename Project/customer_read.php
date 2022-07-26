@@ -12,9 +12,10 @@
     <!-- container -->
     <div class="container">
         <div class="page-header">
-            <h1>Read Products</h1>
+            <h1>Customer List</h1>
         </div>
 
+        <!-- PHP code to read records will be here -->
         <?php
         // include database connection
         include 'config/database.php';
@@ -22,7 +23,7 @@
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT id, name, description, price FROM products ORDER BY id DESC";
+        $query = "SELECT id, first_name, last_name, email, status FROM customer ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -30,24 +31,26 @@
         $num = $stmt->rowCount();
 
         // link to create record form
-        echo "<a href='product_create.php' class='btn btn-primary m-b-1em'>Create New Product</a>";
+        echo "<a href='customer_create.php' class='btn btn-primary m-b-1em'>Sign in Customer</a>";
+
 
         //check if more than 0 record found
         if ($num > 0) {
 
+            // data from database will be here
             echo "<table class='table table-hover table-responsive table-bordered'>"; //start table
 
             //creating our table heading
             echo "<tr>";
             echo "<th>ID</th>";
-            echo "<th>Name</th>";
-            echo "<th>Description</th>";
-            echo "<th>Price</th>";
+            echo "<th>First name</th>";
+            echo "<th>Last name</th>";
+            echo "<th>Email</th>";
+            echo "<th>Status</th>";
             echo "<th>Action</th>";
             echo "</tr>";
 
             // table body will be here
-
             // retrieve our table contents
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 // extract row
@@ -56,13 +59,13 @@
                 // creating new table row per record
                 echo "<tr>";
                 echo "<td>{$id}</td>";
-                echo "<td>{$name}</td>";
-                echo "<td>{$description}</td>";
-                echo "<td>{$price}</td>";
+                echo "<td>{$first_name}</td>";
+                echo "<td>{$last_name}</td>";
+                echo "<td>{$email}</td>";
+                echo "<td>{$status}</td>";
                 echo "<td>";
                 // read one record
-                
-                echo "<a href='product_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";
+                echo "<a href='customer_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";
 
                 // we will use this links on next part of this post
                 echo "<a href='update.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>";
@@ -74,7 +77,6 @@
             }
 
 
-
             // end table
             echo "</table>";
         }
@@ -83,7 +85,6 @@
             echo "<div class='alert alert-danger'>No records found.</div>";
         }
         ?>
-
 
     </div> <!-- end .container -->
 
