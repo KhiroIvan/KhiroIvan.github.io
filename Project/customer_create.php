@@ -127,10 +127,21 @@ function validateDate($date, $format = 'Y-n-d')
             }
 
             $birth_date = $_POST['birth_date_year'] . "-" . $_POST['birth_date_month'] . "-" . $_POST['birth_date_day'];
+            $today = date('Y-n-d');
+            $birth = date_create($birth_date);
+            $todate = date_create($today);
+            $diff = date_diff($birth,$todate);
             if (validateDate($birth_date) == false) {
-                $emptyMes = $emptyMes."Birth selected date does not exist<br>";
+                $msg = $msg . "Birthdate selected is not exist<br>";
+                $save = false;
+            }elseif ($diff->format("%R%a")<6570){
+                $msg = $msg . "Customer must be over 18 years old<br>";
                 $save = false;
             }
+            $today = date('Y-n-d');
+            $birth = date_create($birth_date);
+            $todate = date_create($today);
+            $diff = date_diff($birth,$todate);
 
             $status = $_POST['status'];
 
@@ -184,19 +195,19 @@ function validateDate($date, $format = 'Y-n-d')
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>First Name</td>
-                    <td><input type='text' name='first_name' class='form-control' /></td>
+                    <td><input type='text' name='first_name' class='form-control' value="<?php if (isset($_POST['first_name'])) echo $_POST['first_name']; ?>" /></td>
                 </tr>
                 <tr>
                     <td>Last Name</td>
-                    <td><input name='last_name' class='form-control'></textarea></td>
+                    <td><input name='last_name' class='form-control' value="<?php if (isset($_POST['last_name'])) echo $_POST['last_name']; ?>" /> </td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td><input type='text' name='email' class='form-control' /></td>
+                    <td><input type='text' name='email' class='form-control' value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" /></td>
                 </tr>
                 <tr>
                     <td>Password</td>
-                    <td><input type='text' name='passw' class='form-control' /></td>
+                    <td><input type='text' name='passw' class='form-control' value="<?php if (isset($_POST['passw'])) echo $_POST['passw']; ?>"/></td>
                 </tr>
                 <tr>
                     <td>Gender</td>
