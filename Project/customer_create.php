@@ -81,18 +81,18 @@ function validateDate($date, $format = 'Y-n-d')
             // posted values
 
             $emptyMes = "";
-            
+
             $first_name = $_POST['first_name'];
 
             if (empty($first_name)) {
-                $emptyMes = $emptyMes."please do not leave first name empty<br>";
+                $emptyMes = $emptyMes . "please do not leave first name empty<br>";
                 $save = false;
             }
 
             $last_name = $_POST['last_name'];
 
             if (empty($last_name)) {
-                $emptyMes = $emptyMes."please do not leave last name empty<br>";
+                $emptyMes = $emptyMes . "please do not leave last name empty<br>";
                 $save = false;
             }
 
@@ -101,7 +101,7 @@ function validateDate($date, $format = 'Y-n-d')
             if (empty($email)) {
                 $emptyMes = $emptyMes . "please do not leave email empty<br>";
                 $save = false;
-            }elseif (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$email)) {
+            } elseif (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', $email)) {
                 $emptyMes = "Invalid email format<br>";
                 $save = false;
             }
@@ -111,18 +111,18 @@ function validateDate($date, $format = 'Y-n-d')
             if (empty($passw)) {
                 $emptyMes = $emptyMes . "Please do not leave password empty<br>";
                 $save = false;
-            }elseif (strlen($passw)<=5) {
+            } elseif (strlen($passw) <= 5) {
                 $emptyMes = $emptyMes . "Password format should be more than 6 character<br>";
                 $save = false;
-            }elseif (!preg_match("/[a-z]/",$passw)||!preg_match("/[A-Z]/",$passw)||!preg_match("/[1-9]/",$passw)) {
+            } elseif (!preg_match("/[a-z]/", $passw) || !preg_match("/[A-Z]/", $passw) || !preg_match("/[1-9]/", $passw)) {
                 $emptyMes = $emptyMes . "Password must have <br>Uppercase letters [A-Z]<br>Lowercase letters [a-z] <br>Numbers [1-9]";
                 $save = false;
             }
 
-            $gender = $_POST['gender'];
-
-            if (empty($gender)) {
-                $emptyMes = $emptyMes."please do not leave gender empty<br>";
+            if (isset($_POST['gender'])) {
+                $gender = htmlspecialchars(strip_tags($_POST['gender']));
+            } else {
+                $emptyMes = $emptyMes . "please do not leave gender empty<br>";
                 $save = false;
             }
 
@@ -130,23 +130,23 @@ function validateDate($date, $format = 'Y-n-d')
             $today = date('Y-n-d');
             $birth = date_create($birth_date);
             $todate = date_create($today);
-            $diff = date_diff($birth,$todate);
+            $diff = date_diff($birth, $todate);
             if (validateDate($birth_date) == false) {
-                $msg = $msg . "Birthdate selected is not exist<br>";
+                $emptyMes = $emptyMesmsg . "Birthdate selected is not exist<br>";
                 $save = false;
-            }elseif ($diff->format("%R%a")<6570){
-                $msg = $msg . "Customer must be over 18 years old<br>";
+            } elseif ($diff->format("%R%a") < 6570) {
+                $emptyMes = $emptyMes . "Customer must be over 18 years old<br>";
                 $save = false;
             }
             $today = date('Y-n-d');
             $birth = date_create($birth_date);
             $todate = date_create($today);
-            $diff = date_diff($birth,$todate);
+            $diff = date_diff($birth, $todate);
 
-            $status = $_POST['status'];
-
-            if (empty($status)) {
-                $emptyMes = $emptyMes."please do not leave status empty<br>";
+            if (isset($_POST['status'])) {
+                $status = htmlspecialchars(strip_tags($_POST['status']));
+            } else {
+                $emptyMes = $emptyMes . "please do not leave status empty<br>";
                 $save = false;
             }
 
@@ -173,14 +173,13 @@ function validateDate($date, $format = 'Y-n-d')
                 $stmt->bindParam(':created', $created);
                 // Execute the query
 
-            
+
                 if ($save != false) {
                     echo "<div class='alert alert-success'> Record was saved.</div>";
                     echo $stmt->execute();
                 } else {
                     echo "<div class='alert alert-danger'> Unable to save record.<br>$emptyMes</div>";
                 }
-
             }
             // show error
             catch (PDOException $exception) {
@@ -207,13 +206,16 @@ function validateDate($date, $format = 'Y-n-d')
                 </tr>
                 <tr>
                     <td>Password</td>
-                    <td><input type='text' name='passw' class='form-control' value="<?php if (isset($_POST['passw'])) echo $_POST['passw']; ?>"/></td>
+                    <td><input type='text' name='passw' class='form-control' value="<?php if (isset($_POST['passw'])) echo $_POST['passw']; ?>" /></td>
                 </tr>
                 <tr>
                     <td>Gender</td>
                     <td>
-                        <input type="radio" name='gender' value="male"><label for="html">Male</label>&nbsp;
-                        <input type="radio" name='gender' value="female"><label for="html">Female</label>
+                        <input type="radio" name='gender' value="male" <?php if (isset($_POST['gender']) && ($gender == "male")) echo 'checked'; ?>><label for="html">Male</label>
+
+                        &nbsp;
+
+                        <input type="radio" name='gender' value="female" <?php if (isset($_POST['gender']) && ($gender == "female")) echo 'checked'; ?>><label for="html">Female</label>
                     </td>
                 </tr>
                 <tr>
@@ -225,15 +227,18 @@ function validateDate($date, $format = 'Y-n-d')
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name='status' value="Available"><label for="html">Available</label>&nbsp;
-                        <input type="radio" name='status' value="Non_available"><label for="html">Non Available</label>
+                        <input type="radio" name='status' value="active" <?php if (isset($_POST['status']) && ($gender == "active")) echo 'checked'; ?>> <label for="html">Active</label>
+
+                        &nbsp;
+
+                        <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($gender == "deactive")) echo 'checked'; ?>><label for="html">Deactive</label>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read customers</a>
+                        <a href='customer_read.php' class='btn btn-danger'>Back to read customers</a>
                     </td>
                 </tr>
             </table>
