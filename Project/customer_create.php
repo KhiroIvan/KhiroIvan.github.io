@@ -45,6 +45,8 @@ function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
     }
     echo '</select>';
     echo "<br>";
+
+    
 }
 
 function validateDate($date, $format = 'Y-n-d')
@@ -104,6 +106,17 @@ function validateDate($date, $format = 'Y-n-d')
             } elseif (!preg_match('/^[^0-9][_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', $email)) {
                 $emptyMes = "Invalid email format<br>";
                 $save = false;
+            } else {
+                include 'config/database.php';
+                $query = "SELECT * FROM customer WHERE email = :email";
+                $stmt = $con->prepare($query);
+                $stmt->bindParam(':email', $email);
+                $stmt->execute();
+                $num = $stmt->rowCount();
+                if ($num > 0) { 
+                    $emptyMes = "Repeated email detected<br>";
+                    $save = false;
+                }
             }
 
             $passw = $_POST['passw'];
@@ -176,7 +189,7 @@ function validateDate($date, $format = 'Y-n-d')
 
                 if ($save != false) {
                     echo "<div class='alert alert-success'> Record was saved.</div>";
-                    echo $stmt->execute();
+                    $stmt->execute();
                 } else {
                     echo "<div class='alert alert-danger'> Unable to save record.<br>$emptyMes</div>";
                 }
@@ -211,27 +224,34 @@ function validateDate($date, $format = 'Y-n-d')
                 <tr>
                     <td>Gender</td>
                     <td>
-                        <input type="radio" name='gender' value="male" <?php if (isset($_POST['gender']) && ($gender == "male")) echo 'checked'; ?>><label for="html">Male</label>
+                        <input type="radio" name='gender' value="male" <?php if (isset($_POST['gender']) && ($gender == "male")) echo 'checked'; ?>><label for="html"> Male</label>
 
                         &nbsp;
 
-                        <input type="radio" name='gender' value="female" <?php if (isset($_POST['gender']) && ($gender == "female")) echo 'checked'; ?>><label for="html">Female</label>
+                        <input type="radio" name='gender' value="female" <?php if (isset($_POST['gender']) && ($gender == "female")) echo 'checked'; ?>><label for="html"> Female</label>
                     </td>
                 </tr>
                 <tr>
                     <td>Birth Date</td>
                     <td>
-                        <?php dropdown($sday = "", $smonth = "", $syear = "2021", $name = "birth_date"); ?>
+                        <?php 
+                        
+                        $yearago = date('Y', strtotime('18 years ago'));
+
+                        dropdown($sday = "", $smonth = "", $syear = $yearago, $name = "birth_date"); 
+                        
+                        ?>
+
                     </td>
                 </tr>
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name='status' value="active" <?php if (isset($_POST['status']) && ($gender == "active")) echo 'checked'; ?>> <label for="html">Active</label>
+                        <input type="radio" name='status' value="active" <?php if (isset($_POST['status']) && ($status == "active")) echo 'checked'; ?>> <label for="html"> Active</label>
 
                         &nbsp;
 
-                        <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($gender == "deactive")) echo 'checked'; ?>><label for="html">Deactive</label>
+                        <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($status == "deactive")) echo 'checked'; ?>><label for="html"> Deactive</label>
                     </td>
                 </tr>
                 <tr>
