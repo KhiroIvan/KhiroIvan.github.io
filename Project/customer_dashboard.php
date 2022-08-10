@@ -12,7 +12,7 @@
     <!-- container -->
     <div class="container">
         <div class="page-header">
-            <h1>Read Customers DETAILS</h1>
+            <h1>Customers Dashboard</h1>
         </div>
 
         <!-- PHP read one record will be here -->
@@ -86,12 +86,7 @@
                 <td>Status</td>
                 <td><?php echo htmlspecialchars($status, ENT_QUOTES);  ?></td>
             </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <a href='customer_read.php' class='btn btn-danger'>Back to customer list</a>
-                </td>
-            </tr>
+        
         </table>
 
     </div> <!-- end .container -->
