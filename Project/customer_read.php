@@ -29,10 +29,8 @@
             echo "<div class='alert alert-success'>Record was deleted.</div>";
         }
 
-
-
         // select all data
-        $query = "SELECT id, first_name, last_name, email, status FROM customer ORDER BY id DESC";
+        $query = "SELECT id, first_name, last_name, email, image status FROM customer ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -56,7 +54,20 @@
             echo "<th>Last name</th>";
             echo "<th>Email</th>";
             echo "<th>Status</th>";
+            echo "<th>Image</th>";
             echo "<th>Action</th>";
+
+            echo "<td>";
+            // read one record
+
+            echo "<a href='product_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";
+
+            // we will use this links on next part of this post
+            echo "<a href='product_update.php?id={$id}' class='btn btn-primary m-r-1em'>Edit</a>";
+
+            // we will use this links on next part of this post
+            echo "<a href='#' onclick='delete_user({$id});'  class='btn btn-danger'>Delete</a>";
+            echo "</td>";
             echo "</tr>";
 
             // table body will be here
@@ -72,6 +83,11 @@
                 echo "<td>{$last_name}</td>";
                 echo "<td>{$email}</td>";
                 echo "<td>{$status}</td>";
+                if(empty($image)){
+                    echo "<td><img src='uploads/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg' width='30' height='30'></td>";
+                }else{
+                    echo "<td><img src='uploads/{$image}' width='30' height='30'></td>";
+                }
                 echo "<td>";
                 // read one record
                 echo "<a href='customer_read_one.php?id={$id}' class='btn btn-info m-r-1em'>Read</a>";

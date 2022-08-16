@@ -162,12 +162,44 @@ function validateDate($date, $format = 'Y-n-d')
                 $emptyMes = $emptyMes . "please do not leave status empty<br>";
                 $save = false;
             }
+            // new 'image' field
+            $image=!empty($_FILES["image"]["name"])
+            ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+            : "";
+            $image=htmlspecialchars(strip_tags($image));
+            if($image){
+ 
+                $target_directory = "uploads/";
+                $target_file = $target_directory . $image;
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+             
+                // error message is empty
+                $file_upload_error_messages="";
+                
+                // make sure certain file types are allowed
+                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                if(!in_array($file_type, $allowed_file_types)){
+                    $file_upload_error_messages.="<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                }
+                // make sure file does not exist
+                if(file_exists($target_file)){
+                    $file_upload_error_messages.="<div>Image already exists. Try to change file name.</div>";
+                }
+                // make sure submitted file is not too large, can't be larger than 1MB
+                if($_FILES['image']['size'] > 1024000){
+                    $file_upload_error_messages.="<div>Image must be less than 1 MB in size.</div>";
+                }
+                // make sure the 'uploads' folder exists
+                // if not, create it
+                if(!is_dir($target_directory)){
+                    mkdir($target_directory, 0777, true);
+                }
 
             // include database connection
             include 'config/database.php';
             try {
                 // insert query
-                $query = "INSERT INTO customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, gender=:gender, birth_date=:birth_date, status=:status, created=:created";
+                $query = "INSERT INTO customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, gender=:gender, birth_date=:birth_date, status=:status, created=:created, image=:image";
                 // prepare query for execution
 
                 $stmt = $con->prepare($query);
@@ -178,6 +210,7 @@ function validateDate($date, $format = 'Y-n-d')
                 $stmt->bindParam(':last_name', $last_name);
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':passw', $passw);
+                $stmt->bindParam(':image', $image);
                 $stmt->bindParam(':gender', $gender);
                 $stmt->bindParam(':birth_date', $birth_date);
                 $stmt->bindParam(':status', $status);
@@ -198,6 +231,7 @@ function validateDate($date, $format = 'Y-n-d')
             catch (PDOException $exception) {
                 die('ERROR: ' . $exception->getMessage());
             }
+        }
         }
 
         ?>
@@ -253,6 +287,9 @@ function validateDate($date, $format = 'Y-n-d')
 
                         <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($status == "deactive")) echo 'checked'; ?>><label for="html"> Deactive</label>
                     </td>
+                </tr>
+                <td>Photo</td>
+                    <td><input type="file" name="image" /></td>
                 </tr>
                 <tr>
                     <td></td>

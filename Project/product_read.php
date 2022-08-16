@@ -28,7 +28,7 @@
         }
 
         // select all data
-        $query = "SELECT id, name, description, price FROM products ORDER BY id DESC";
+        $query = "SELECT id, name, description, price, image FROM products ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -49,6 +49,7 @@
             echo "<th>Name</th>";
             echo "<th>Description</th>";
             echo "<th>Price</th>";
+            echo "<th>Image</th>";
             echo "<th>Action</th>";
             echo "</tr>";
 
@@ -65,6 +66,11 @@
                 echo "<td>{$name}</td>";
                 echo "<td>{$description}</td>";
                 echo "<td>{$price}</td>";
+                if(empty($image)){
+                    echo "<td><img src='uploads/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg' width='30' height='30'></td>";
+                }else{
+                    echo "<td><img src='uploads/{$image}' width='30' height='30'></td>";
+                }
                 echo "<td>";
                 // read one record
 

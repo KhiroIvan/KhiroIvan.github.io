@@ -155,21 +155,20 @@ function validateDate($date, $format = 'Y-n-j')
                 if (validateDate($expiry_date) == false) {
                     $msg = $msg . "Expiry date selected is not exist<br>";
                     $save = false;
-                } elseif ($x->format("%R%m") >= 1 ){
-                    if((int)($x->format("%R%a") <= 0)){
+                } elseif ($x->format("%R%m") >= 1) {
+                    if ((int)($x->format("%R%a") <= 0)) {
                         $msg = $msg . "Expiry date should not earlier than manufacture date<br>";
                         $save = false;
                     }
-                    
-                }elseif ($x->format("%m") < 1 ){
+                } elseif ($x->format("%m") < 1) {
                     $msg = $msg . "Expiry date should not earlier than manufacture date<br>";
-                        $save = false;
+                    $save = false;
                 }
 
                 //status check//
                 if (isset($_POST['status'])) {
                     $status = htmlspecialchars(strip_tags($_POST['status']));
-                }else {
+                } else {
                     $msg = $msg . "Please do not leave status empty<br>";
                     $save = false;
                 }
@@ -222,16 +221,15 @@ function validateDate($date, $format = 'Y-n-j')
                     <td>Price</td>
                     <td><input type='text' name='price' value="<?php echo htmlspecialchars($price, ENT_QUOTES);  ?>" class='form-control' /></td>
                 </tr>
+
                 <tr>
                     <td>Manufacture date </td>
                     <td>
                         <?php
-                        
-                        $yearsave_manu = substr($manu_date,0,4);
-                        $monthsave_manu = substr($manu_date,5,2);
-                        $daysave_manu = substr($manu_date,8,2);
-                        //echo $row['manu_date'];
-                        //echo $manu_date;
+
+                        $yearsave_manu = substr($manu_date, 0, 4);
+                        $monthsave_manu = substr($manu_date, 5, 2);
+                        $daysave_manu = substr($manu_date, 8, 2);
                         dropdown($sday = $daysave_manu, $smonth = $monthsave_manu, $syear = $yearsave_manu, $datetype = "manu_date");
                         ?>
                     </td>
@@ -240,11 +238,10 @@ function validateDate($date, $format = 'Y-n-j')
                 <tr>
                     <td>Expiry date</td>
                     <td>
-                        <?php 
-                        $yearsave_expiry = substr($expiry_date,0,4);
-                        $monthsave_expiry = substr($expiry_date,5,2);
-                        $daysave_expiry = substr($expiry_date,8,2);
-                        //echo $row['expiry_date'];
+                        <?php
+                        $yearsave_expiry = substr($expiry_date, 0, 4);
+                        $monthsave_expiry = substr($expiry_date, 5, 2);
+                        $daysave_expiry = substr($expiry_date, 8, 2);
                         dropdown($sday = $daysave_expiry, $smonth = $monthsave_expiry, $syear = $yearsave_expiry, $datetype = "expiry_date");
                         ?>
                     </td>
@@ -252,7 +249,7 @@ function validateDate($date, $format = 'Y-n-j')
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name="status" value="available" <?php if($status == "available") echo 'checked'; ?>><label>Available</label>&nbsp;
+                        <input type="radio" name="status" value="available" <?php if ($status == "available") echo 'checked'; ?>><label>Available</label>&nbsp;
                         <input type="radio" name="status" value="not_available" <?php if ($status == "not_available") echo 'checked'; ?>><label>Not Available</label>
                     </td>
                 </tr>
