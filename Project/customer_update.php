@@ -144,17 +144,17 @@ function validateDate($date, $format = 'Y-n-j')
             if (empty($passw)) {
                 $msg = $msg . "Please do not leave password empty<br>";
                 $save = false;
-            } elseif (strlen($passw) <= 5||!preg_match("/[a-z]/", $passw) || !preg_match("/[A-Z]/", $passw) || !preg_match("/[1-9]/", $passw)) {
+            } elseif (strlen($passw) <= 5 || !preg_match("/[a-z]/", $passw) || !preg_match("/[A-Z]/", $passw) || !preg_match("/[1-9]/", $passw)) {
                 $msg = $msg . "Invalid password format (Password format should be more than 6 character, at least 1 uppercase, 1 lowercase & 1 number)<br>";
                 $save = false;
             }
-            
+
             $confirmpassw = $_POST['confirmpassw'];
             if (empty($confirmpassw)) {
                 $msg = $msg . "Please do not leave confirm password empty<br>";
                 $save = false;
-            }elseif ($confirmpassw != $passw){
-                $msg = $msg ."Password must be same with confirm password";
+            } elseif ($confirmpassw != $passw) {
+                $msg = $msg . "Password must be same with confirm password";
                 $save = false;
             }
 
@@ -174,47 +174,107 @@ function validateDate($date, $format = 'Y-n-j')
 
             //status check//
             if (isset($_POST['gender'])) {
-                $gender = htmlspecialchars(strip_tags($_POST['gender']));   
-            }else{
+                $gender = htmlspecialchars(strip_tags($_POST['gender']));
+            } else {
                 $msg = $msg . "Please do not leave gender empty<br>";
                 $save = false;
             }
-            
+
             if (isset($_POST['status'])) {
-                $status = htmlspecialchars(strip_tags($_POST['status']));  
-            }else{
+                $status = htmlspecialchars(strip_tags($_POST['status']));
+            } else {
                 $msg = $msg . "Please do not leave status empty<br>";
                 $save = false;
             }
 
-                // write update query
-                // in this case, it seemed like we have so many fields to pass and
-                // it is better to label them and not use question marks
-                $query = "UPDATE customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, birth_date=:birth_date, gender=:gender, status=:status WHERE id = :id";
+            // new 'image' field
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $image = htmlspecialchars(strip_tags($image));
+            if ($image) {
 
-                $stmt = $con->prepare($query);
-                $stmt->bindParam(':first_name', $first_name);
-                $stmt->bindParam(':last_name', $last_name);
-                $stmt->bindParam(':email', $email);
-                $stmt->bindParam(':passw', $passw);
-                $stmt->bindParam(':birth_date', $birth_date);
-                $stmt->bindParam(':gender', $gender);
-                $stmt->bindParam(':status', $status);
-                $stmt->bindParam(':id', $id);
-                
-                if ($save != false) {
-                    echo "<div class='alert alert-success'>Record was saved.</div>";
-                    $stmt->execute();
-                } else {
-                    echo "<div class='alert alert-danger'><b>Unable to save record:</b><br>$msg</div>";
+                $target_directory = "uploads/";
+                $target_file = $target_directory . $image;
+                $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
+
+                // error message is empty
+                $file_upload_error_messages = "";
+
+                // make sure certain file types are allowed
+                $allowed_file_types = array("jpg", "jpeg", "png", "gif");
+                if (!in_array($file_type, $allowed_file_types)) {
+                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
                 }
-         
-        
+                // make sure file does not exist
+                if (file_exists($target_file)) {
+                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
+                }
+                // make sure submitted file is not too large, can't be larger than 1MB
+                if ($_FILES['image']['size'] > 1024000) {
+                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
+                }
+                // make sure the 'uploads' folder exists
+                // if not, create it
+                if (!is_dir($target_directory)) {
+                    mkdir($target_directory, 0777, true);
+                }
+            }
+            // if $file_upload_error_messages is still empty
+            if (empty($file_upload_error_messages)) {
+                // it means there are no errors, so try to upload the file
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                    // it means photo was uploaded
+                } else {
+                    echo "<div class='alert alert-danger'>";
+                    echo "<div>Unable to upload photo.</div>";
+                    echo "<div>Update the record to upload photo.</div>";
+                    echo "</div>";
+                }
+            } // if $file_upload_error_messages is NOT empty
+            else {
+                // it means there are some errors, so show them to user
+                echo "<div class='alert alert-danger'>";
+                echo "<div>{$file_upload_error_messages}</div>";
+                echo "<div>Update the record to upload photo.</div>";
+                echo "</div>";
+            }
+
+            //status check//
+            if (isset($_POST['status'])) {
+                $status = htmlspecialchars(strip_tags($_POST['status']));
+            } else {
+                $msg = $msg . "Please do not leave status empty<br>";
+                $save = false;
+            }
+
+            // write update query
+            // in this case, it seemed like we have so many fields to pass and
+            // it is better to label them and not use question marks
+            $query = "UPDATE customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, image=:image, birth_date=:birth_date, gender=:gender, status=:status WHERE id = :id";
+
+            $stmt = $con->prepare($query);
+            $stmt->bindParam(':first_name', $first_name);
+            $stmt->bindParam(':last_name', $last_name);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':passw', $passw);
+            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':birth_date', $birth_date);
+            $stmt->bindParam(':gender', $gender);
+            $stmt->bindParam(':status', $status);
+            $stmt->bindParam(':id', $id);
+
+            if ($save != false) {
+                echo "<div class='alert alert-success'>Record was saved.</div>";
+                $stmt->execute();
+            } else {
+                echo "<div class='alert alert-danger'><b>Unable to save record:</b><br>$msg</div>";
+            }
         } ?>
 
 
         <!--we have our html form here where new record information can be updated-->
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}"); ?>" method="post" enctype="multipart/form-data">
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>First Name</td>
@@ -237,12 +297,16 @@ function validateDate($date, $format = 'Y-n-j')
                     <td><input type='text' name='confirmpassw' value="<?php if (isset($_POST['confirmpassw'])) echo $_POST['confirmpassw']; ?>" class='form-control' /></td>
                 </tr>
                 <tr>
+                    <td>Image</td>
+                    <td><input type='file' name='image' value="<?php echo $img; ?>" />
+                </tr>
+                <tr>
                     <td>Date of Birth </td>
                     <td>
                         <?php
-                        $yearsave_birth = substr($birth_date,0,4);
-                        $monthsave_birth = substr($birth_date,5,2);
-                        $daysave_birth = substr($birth_date,8,2);
+                        $yearsave_birth = substr($birth_date, 0, 4);
+                        $monthsave_birth = substr($birth_date, 5, 2);
+                        $daysave_birth = substr($birth_date, 8, 2);
                         dropdown($sday = $daysave_birth, $smonth = $monthsave_birth, $syear = $yearsave_birth, $datetype = "birth_date");
                         ?>
                     </td>
@@ -251,14 +315,14 @@ function validateDate($date, $format = 'Y-n-j')
                 <tr>
                     <td>Gender</td>
                     <td>
-                        <input type="radio" name="gender" value="male" <?php if($gender == "male") echo 'checked'; ?>><label>Male</label>&nbsp;
+                        <input type="radio" name="gender" value="male" <?php if ($gender == "male") echo 'checked'; ?>><label>Male</label>&nbsp;
                         <input type="radio" name="gender" value="female" <?php if ($gender == "female") echo 'checked'; ?>><label>Female</label>
                     </td>
                 </tr>
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name="status" value="active" <?php if($status == "active") echo 'checked'; ?>><label>Active</label>&nbsp;
+                        <input type="radio" name="status" value="active" <?php if ($status == "active") echo 'checked'; ?>><label>Active</label>&nbsp;
                         <input type="radio" name="status" value="deactive" <?php if ($status == "deactive") echo 'checked'; ?>><label>Deactive</label>
                     </td>
                 </tr>

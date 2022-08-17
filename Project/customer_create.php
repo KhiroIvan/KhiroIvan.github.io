@@ -1,10 +1,9 @@
 <?php
-
-function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
+function dropdown($sday = "", $smonth = "", $syear = "", $datetype = "")
 {
 
     if (empty($sday)) {
-        $sday = date('d');
+        $sday = date('j');
     }
 
     if (empty($smonth)) {
@@ -15,13 +14,12 @@ function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
         $syear = date('Y');
     }
 
-    $nameday = $name . "_day";
-    $namemonth = $name . "_month";
-    $nameyear = $name . "_year";
-
     //---v---select day---v---//
+    $nameday = $datetype . "_day";
+    $namemonth = $datetype . "_month";
+    $nameyear = $datetype . "_year";
 
-    echo "<select name = $nameday>";
+    echo "<select name= $nameday>";
     for ($day = 1; $day <= 31; $day++) {
         $s = ($day == $sday) ? 'selected' : '';
         echo "<option value = $day $s> $day </option>";
@@ -45,11 +43,10 @@ function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
     }
     echo '</select>';
     echo "<br>";
-
-    
 }
-
-function validateDate($date, $format = 'Y-n-d')
+?>
+<?php
+function validateDate($date, $format = 'Y-n-j')
 {
     $d = DateTime::createFromFormat($format, $date);
     // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
@@ -57,11 +54,12 @@ function validateDate($date, $format = 'Y-n-d')
 }
 ?>
 
+
 <!DOCTYPE HTML>
 <html>
 
 <head>
-    <title>PDO - Create a Record - PHP CRUD Tutorial</title>
+    <title>PDO - Create Customer - PHP CRUD Tutorial</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
@@ -70,12 +68,10 @@ function validateDate($date, $format = 'Y-n-d')
     <!-- container -->
     <div class="container">
         <div class="page-header">
-            <h1>Create Customer Account</h1>
+            <h1>Create Customer</h1>
         </div>
-        <!-- html form to create product will be here -->
-
+        <!-- PHP insert code will be here -->
         <?php
-
         $save = true;
 
         if (!empty($_POST)) {
@@ -113,7 +109,7 @@ function validateDate($date, $format = 'Y-n-d')
                 $stmt->bindParam(':email', $email);
                 $stmt->execute();
                 $num = $stmt->rowCount();
-                if ($num > 0) { 
+                if ($num > 0) {
                     $emptyMes = "Repeated email detected<br>";
                     $save = false;
                 }
@@ -145,7 +141,7 @@ function validateDate($date, $format = 'Y-n-d')
             $todate = date_create($today);
             $diff = date_diff($birth, $todate);
             if (validateDate($birth_date) == false) {
-                $emptyMes = $emptyMesmsg . "Birthdate selected is not exist<br>";
+                $emptyMes = $emptyMes . "Birthdate selected is not exist<br>";
                 $save = false;
             } elseif ($diff->format("%R%a") < 6570) {
                 $emptyMes = $emptyMes . "Customer must be over 18 years old<br>";
@@ -162,6 +158,7 @@ function validateDate($date, $format = 'Y-n-d')
                 $emptyMes = $emptyMes . "please do not leave status empty<br>";
                 $save = false;
             }
+
             // new 'image' field
             $image=!empty($_FILES["image"]["name"])
             ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
@@ -195,15 +192,35 @@ function validateDate($date, $format = 'Y-n-d')
                     mkdir($target_directory, 0777, true);
                 }
 
+            }
+            // if $file_upload_error_messages is still empty
+            if(empty($file_upload_error_messages)){
+                // it means there are no errors, so try to upload the file
+                if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
+                    // it means photo was uploaded
+                }else{
+                    echo "<div class='alert alert-danger'>";
+                        echo "<div>Unable to upload photo.</div>";
+                        echo "<div>Update the record to upload photo.</div>";
+                    echo "</div>";
+                }
+            }// if $file_upload_error_messages is NOT empty
+            else{
+                // it means there are some errors, so show them to user
+                echo "<div class='alert alert-danger'>";
+                    echo "<div>{$file_upload_error_messages}</div>";
+                    echo "<div>Update the record to upload photo.</div>";
+                echo "</div>";
+            }
+
+
             // include database connection
             include 'config/database.php';
             try {
                 // insert query
-                $query = "INSERT INTO customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, gender=:gender, birth_date=:birth_date, status=:status, created=:created, image=:image";
+                $query = "INSERT INTO customer SET first_name=:first_name, last_name=:last_name, email=:email, passw=:passw, birth_date=:birth_date, gender=:gender, image=:image, status=:status, created=:created";
                 // prepare query for execution
-
                 $stmt = $con->prepare($query);
-
 
                 // bind the parameters
                 $stmt->bindParam(':first_name', $first_name);
@@ -211,20 +228,20 @@ function validateDate($date, $format = 'Y-n-d')
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':passw', $passw);
                 $stmt->bindParam(':image', $image);
-                $stmt->bindParam(':gender', $gender);
                 $stmt->bindParam(':birth_date', $birth_date);
+                $stmt->bindParam(':gender', $gender);
                 $stmt->bindParam(':status', $status);
                 // specify when this record was inserted to the database
                 $created = date('Y-m-d H:i:s');
                 $stmt->bindParam(':created', $created);
-                // Execute the query
+
 
 
                 if ($save != false) {
-                    echo "<div class='alert alert-success'> Record was saved.</div>";
+                    echo "<div class='alert alert-success'>Record was saved.</div>";
                     $stmt->execute();
                 } else {
-                    echo "<div class='alert alert-danger'> Unable to save record.<br>$emptyMes</div>";
+                    echo "<div class='alert alert-danger'><b>Unable to save record:</b><br>$emptyMes</div>";
                 }
             }
             // show error
@@ -232,12 +249,10 @@ function validateDate($date, $format = 'Y-n-d')
                 die('ERROR: ' . $exception->getMessage());
             }
         }
-        }
-
         ?>
-        <!-- html form here where the product information will be entered -->
 
-        <form name="customer" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <!-- html form here where the product information will be entered -->
+        <form name="customer" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" onsubmit="return validateForm()" method="post" enctype="multipart/form-data" required>
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>First Name</td>
@@ -245,7 +260,7 @@ function validateDate($date, $format = 'Y-n-d')
                 </tr>
                 <tr>
                     <td>Last Name</td>
-                    <td><input name='last_name' class='form-control' value="<?php if (isset($_POST['last_name'])) echo $_POST['last_name']; ?>" /> </td>
+                    <td><input type='text' name='last_name' class='form-control' value="<?php if (isset($_POST['last_name'])) echo $_POST['last_name']; ?>" /></td>
                 </tr>
                 <tr>
                     <td>Email</td>
@@ -256,56 +271,46 @@ function validateDate($date, $format = 'Y-n-d')
                     <td><input type='text' name='passw' class='form-control' value="<?php if (isset($_POST['passw'])) echo $_POST['passw']; ?>" /></td>
                 </tr>
                 <tr>
-                    <td>Gender</td>
-                    <td>
-                        <input type="radio" name='gender' value="male" <?php if (isset($_POST['gender']) && ($gender == "male")) echo 'checked'; ?>><label for="html"> Male</label>
-
-                        &nbsp;
-
-                        <input type="radio" name='gender' value="female" <?php if (isset($_POST['gender']) && ($gender == "female")) echo 'checked'; ?>><label for="html"> Female</label>
-                    </td>
+                    <td>Photo</td>
+                    <td><input type="file" name="image" /></td>
                 </tr>
                 <tr>
-                    <td>Birth Date</td>
+                    <td>Date of Birth</td>
                     <td>
-                        <?php 
-                        
-                        $yearago = date('Y', strtotime('18 years ago'));
-
-                        dropdown($sday = "", $smonth = "", $syear = $yearago, $name = "birth_date"); 
-                        
+                        <?php
+                        $yearago = date("Y", strtotime('18 years ago'));
+                        dropdown($sday = "", $smonth = "", $syear = $yearago, $datetype = "birth_date");
                         ?>
+                    </td>
 
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>
+                        <input type="radio" name="gender" value="male" <?php if (isset($_POST["gender"]) && ($gender == "male")) echo 'checked'; ?>><label>Male</label>&nbsp;
+                        <input type="radio" name="gender" value="female" <?php if (isset($_POST["gender"]) && ($gender == "female")) echo 'checked'; ?>><label>Female</label>
                     </td>
                 </tr>
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name='status' value="active" <?php if (isset($_POST['status']) && ($status == "active")) echo 'checked'; ?>> <label for="html"> Active</label>
-
-                        &nbsp;
-
-                        <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($status == "deactive")) echo 'checked'; ?>><label for="html"> Deactive</label>
+                        <input type="radio" name="status" value="active" <?php if (isset($_POST["status"]) && ($status == "active")) echo 'checked'; ?>><label>Active</label>&nbsp;
+                        <input type="radio" name="status" value="deactive" <?php if (isset($_POST["status"]) && ($status == "deactive")) echo 'checked'; ?>><label>Deactive</label>
                     </td>
-                </tr>
-                <td>Photo</td>
-                    <td><input type="file" name="image" /></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='customer_read.php' class='btn btn-danger'>Back to read customers</a>
+                        <a href='customer_read.php' class='btn btn-danger'>Back to read customer list</a>
                     </td>
                 </tr>
             </table>
         </form>
 
-
     </div>
     <!-- end .container -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
 
 </body>
 

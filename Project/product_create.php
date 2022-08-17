@@ -133,57 +133,68 @@ function validateDate($date, $format = 'Y-n-d')
             }
 
             // new 'image' field
-            $image=!empty($_FILES["image"]["name"])
-            ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
-            : "";
-            $image=htmlspecialchars(strip_tags($image));
-            if($image){
- 
+            $image = !empty($_FILES["image"]["name"])
+                ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
+                : "";
+            $image = htmlspecialchars(strip_tags($image));
+            if ($image) {
+
                 $target_directory = "uploads/";
                 $target_file = $target_directory . $image;
                 $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
-             
+
                 // error message is empty
-                $file_upload_error_messages="";
-                
+                $file_upload_error_messages = "";
+
                 // make sure certain file types are allowed
                 $allowed_file_types = array("jpg", "jpeg", "png", "gif");
-                if(!in_array($file_type, $allowed_file_types)){
-                    $file_upload_error_messages.="<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                if (!in_array($file_type, $allowed_file_types)) {
+                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
                 }
                 // make sure file does not exist
-                if(file_exists($target_file)){
-                    $file_upload_error_messages.="<div>Image already exists. Try to change file name.</div>";
+                if (file_exists($target_file)) {
+                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
                 }
                 // make sure submitted file is not too large, can't be larger than 1MB
-                if($_FILES['image']['size'] > 1024000){
-                    $file_upload_error_messages.="<div>Image must be less than 1 MB in size.</div>";
+                if ($_FILES['image']['size'] > 1024000) {
+                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
                 }
                 // make sure the 'uploads' folder exists
                 // if not, create it
-                if(!is_dir($target_directory)){
+                if (!is_dir($target_directory)) {
                     mkdir($target_directory, 0777, true);
                 }
-
             }
             // if $file_upload_error_messages is still empty
-            if(empty($file_upload_error_messages)){
+            if (empty($file_upload_error_messages)) {
                 // it means there are no errors, so try to upload the file
-                if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     // it means photo was uploaded
-                }else{
+                } else {
                     echo "<div class='alert alert-danger'>";
-                        echo "<div>Unable to upload photo.</div>";
-                        echo "<div>Update the record to upload photo.</div>";
+                    echo "<div>Unable to upload photo.</div>";
+                    echo "<div>Update the record to upload photo.</div>";
                     echo "</div>";
                 }
-            }// if $file_upload_error_messages is NOT empty
-            else{
+            } // if $file_upload_error_messages is NOT empty
+            else {
                 // it means there are some errors, so show them to user
                 echo "<div class='alert alert-danger'>";
-                    echo "<div>{$file_upload_error_messages}</div>";
-                    echo "<div>Update the record to upload photo.</div>";
+                echo "<div>{$file_upload_error_messages}</div>";
+                echo "<div>Update the record to upload photo.</div>";
                 echo "</div>";
+                
+                if (isset($_POST['filePath'])){
+                    $filePath = $_POST['filePath'];
+
+                    if (file_exists($filePath)){
+                        unlink($filePath);
+                        echo "Your file is deleted";
+                    }else{
+                        echo "Your file is not deleted";
+                    }
+                }
+                
             }
 
             // include database connection
@@ -240,7 +251,8 @@ function validateDate($date, $format = 'Y-n-d')
                 </tr>
                 <tr>
                     <td>Photo</td>
-                    <td><input type="file" name="image" /></td>
+                    <td><input type="file" name="image"/>
+                    <input type="submit" name="submit" value="Delete File"></td>
                 </tr>
 
                 <tr>
@@ -258,11 +270,11 @@ function validateDate($date, $format = 'Y-n-d')
                 <tr>
                     <td>Status</td>
                     <td>
-                        <input type="radio" name='status' value="active" <?php if (isset($_POST['status']) && ($status == "active")) echo 'checked'; ?>> <label for="html"> Active</label>
+                        <input type="radio" name='status' value="available" <?php if (isset($_POST['status']) && ($status == "available")) echo 'checked'; ?>> <label for="html"> Available</label>
 
                         &nbsp;
 
-                        <input type="radio" name='status' value="deactive" <?php if (isset($_POST['status']) && ($status == "deactive")) echo 'checked'; ?>><label for="html"> Deactive</label>
+                        <input type="radio" name='status' value="un_available" <?php if (isset($_POST['status']) && ($status == "un_available")) echo 'checked'; ?>><label for="html"> Un-available</label>
                     </td>
                 </tr>
                 <tr>

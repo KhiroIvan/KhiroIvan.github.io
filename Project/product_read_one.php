@@ -29,7 +29,7 @@
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, name, description, price, status, manu_date, expiry_date FROM products WHERE id = ? ";
+            $query = "SELECT id, name, description, price, status, manu_date, expiry_date, image FROM products WHERE id = ? ";
             $stmt = $con->prepare($query);
 
             // this is the first question mark
@@ -40,6 +40,15 @@
 
             // store retrieved row to a variable
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // values to fill up our form  //extract($row);
+            $name = $row['name'];
+            $description = $row['description'];
+            $price = $row['price'];
+            $image = $row['image'];
+            $status = $row['status'];
+            $manu_date = $row['manu_date'];
+            $expiry_date = $row['expiry_date'];
 
             // values to fill up our form  
             extract($row);
@@ -66,7 +75,10 @@
                 <td>Price</td>
                 <td><?php echo htmlspecialchars($price, ENT_QUOTES);  ?></td>
             </tr>
-            
+            <tr>
+                <td>Image</td>
+                <td><img src="uploads/<?php echo $image; ?>" width="100px" height="100px"></td>
+            </tr>
             <tr>
                 <td>Status</td>
                 <td><?php echo htmlspecialchars($status, ENT_QUOTES);  ?></td>
