@@ -5,16 +5,78 @@
     <title>Create Order</title>
 </head>
 
-<body>
+<?php
+include 'config/database.php';
 
+
+if ($_POST) {
+    $CustomerID = $_POST['customer'];
+    $query = "INSERT INTO orders SET CustomerID=:CustomerID, OrderTime=:OrderTime";
+
+    $stmt = $con->prepare($query);
+    $stmt->bindParam(':CustomerID', $CustomerID);
+    $OrderTime = date('Y-m-d H:i:s');
+    $stmt->bindParam(':OrderTime', $OrderTime);
+    $stmt->execute();
+    $OrderID = $con->lastInsertId();
+
+    $ProductID = $_POST['product'];
+    $Quantity = $_POST['quantity'];
+    for ($i = 0; $i < count($ProductID); $i++) {
+        $query = "INSERT INTO orderdetails SET OrderID=:OrderID, ProductID=:ProductID , Quantity=:Quantity";
+
+        $stmt = $con->prepare($query);
+        $stmt->bindParam(':OrderID', $OrderID);
+        $stmt->bindParam(':ProductID', $ProductID[$i]);
+        $stmt->bindParam(':Quantity', $Quantity[$i]);
+        $stmt->execute();
+    }
+    header("Location: receipt.php?OrderID=$OrderID");
+}
+?>
+
+<body>
     <form action="" method="post">
+        <?php
+        $query = "SELECT id, first_name, last_name FROM customer ORDER BY id DESC";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+
+        // this is how to get number of rows returned
+        $customer_num = $stmt->rowCount();
+        if ($customer_num > 0) {
+            echo '<select name="customer">';
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                extract($row);
+                echo "<option value='$id'>$first_name $last_name</option>";
+            }
+
+            echo '</select>';
+        }
+        ?>
         <table class="table">
             <tr class="product-row">
                 <td>Product</td>
                 <td>
                     <div class="row">
                         <div class="col">
-                            <input type="text" name="product[]" />
+                            <?php
+                            $query = "SELECT id, name FROM products ORDER BY id DESC";
+                            $stmt = $con->prepare($query);
+                            $stmt->execute();
+
+                            // this is how to get number of rows returned
+                            $product_num = $stmt->rowCount();
+                            if ($product_num > 0) {
+                                echo '<select name="product[]">';
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    extract($row);
+                                    echo "<option value='$id'>$name</option>";
+                                }
+
+                                echo '</select>';
+                            }
+                            ?>
                         </div>
                         <div class="col">
                             <select name="quantity[]">
@@ -42,6 +104,7 @@
                             <button type="button" class="del_last btn mb-1 mx-2">Delete Last Product</button>
 
                             <button type="submit">Submit</button>
+                    
                         </div>
                     </div>
                 </td>
@@ -53,17 +116,17 @@
 
     <?php
 
-        if($_POST){
-            $product = $_POST['product'];
-            $quantity = $_POST['quantity'];
-        
-            for($i=0;$i<count($product);$i++){
-                echo $product[$i];
-                echo $quantity[$i];
-                echo "<br>";
-            }
-        }
-     ?>
+    //if($_POST){
+    // $product = $_POST['product'];
+    //$quantity = $_POST['quantity'];
+
+    // for($i=0;$i<count($product);$i++){
+    //     echo $product[$i];
+    //     echo $quantity[$i];
+    //     echo "<br>";
+    //}
+    //}
+    ?>
 
     <script>
         document.addEventListener('click', function(event) {

@@ -82,7 +82,7 @@ function validateDate($date, $format = 'Y-n-j')
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, name, description, price, manu_date, expiry_date, status FROM products WHERE id = ? ";
+            $query = "SELECT id, name, description, price, manu_date, expiry_date, status, image FROM products WHERE id = ? ";
             $stmt = $con->prepare($query);
 
             // this is the first question mark
@@ -101,6 +101,7 @@ function validateDate($date, $format = 'Y-n-j')
             $manu_date = $row['manu_date'];
             $expiry_date = $row['expiry_date'];
             $status = $row['status'];
+            $image = $row['image'];
         }
 
         // show error
@@ -163,14 +164,14 @@ function validateDate($date, $format = 'Y-n-j')
                 }
 
                 // new 'image' field
-                $image = !empty($_FILES["image"]["name"])
+                $newimage = !empty($_FILES["image"]["name"])
                     ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                     : "";
-                $image = htmlspecialchars(strip_tags($image));
-                if ($image) {
+                $newimage = htmlspecialchars(strip_tags($newimage));
+                if ($newimage) {
 
                     $target_directory = "uploads/";
-                    $target_file = $target_directory . $image;
+                    $target_file = $target_directory . $newimage;
                     $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
                     // error message is empty
@@ -234,7 +235,7 @@ function validateDate($date, $format = 'Y-n-j')
                 $stmt->bindParam(':name', $name);
                 $stmt->bindParam(':description', $description);
                 $stmt->bindParam(':price', $price);
-                $stmt->bindParam(':image', $image);
+                $stmt->bindParam(':image', $newimage);
                 $stmt->bindParam(':manu_date', $manu_date);
                 $stmt->bindParam(':expiry_date', $expiry_date);
                 $stmt->bindParam(':status', $status);
@@ -251,6 +252,10 @@ function validateDate($date, $format = 'Y-n-j')
                 } else {
                     echo "<div class='alert alert-danger'>Unable to save record:<br>$msg</div>";
                 }
+                if($image != ""){
+                    unlink("uploads/".$image);
+                }
+                $image = $newimage;
             }
             // show errors
             catch (PDOException $exception) {
@@ -276,7 +281,7 @@ function validateDate($date, $format = 'Y-n-j')
                 </tr>
                 <tr>
                     <td>Image</td>
-                    <td><input type='file' name='image'/><img src="uploads/<?php echo $image; ?>" width="100px" height="100px"></td>
+                    <td><img src="uploads/<?php echo $image; ?>" width="100px" height="100px"><input type='file' name='image'/></td>
                 </tr>
                 <tr>
                     <td>Manufacture date </td>
