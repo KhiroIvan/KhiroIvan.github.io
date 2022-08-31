@@ -303,7 +303,6 @@ function validateDate($date, $format = 'Y-n-j')
                         $yearsave_expiry = substr($expiry_date, 0, 4);
                         $monthsave_expiry = substr($expiry_date, 5, 2);
                         $daysave_expiry = substr($expiry_date, 8, 2);
-                        //echo $row['expiry_date'];
                         dropdown($sday = $daysave_expiry, $smonth = $monthsave_expiry, $syear = $yearsave_expiry, $datetype = "expiry_date");
                         ?>
                     </td>
