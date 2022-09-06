@@ -73,7 +73,10 @@
             </tr>
             <tr>
                 <td>Price</td>
-                <td><?php echo htmlspecialchars($price, ENT_QUOTES);  ?></td>
+                <td><?php 
+                $priceDecimal = number_format($price, 2);
+                echo htmlspecialchars($priceDecimal, ENT_QUOTES);  ?>
+                </td>
             </tr>
             <tr>
                 <td>Image</td>

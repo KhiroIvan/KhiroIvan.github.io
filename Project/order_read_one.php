@@ -1,6 +1,13 @@
 <!DOCTYPE HTML>
 <html>
-
+<style>
+.div1{
+         text-align:right; 
+         float: right;
+         width:50%;
+         display:block;
+   }
+</style>
 <head>
     <title>PDO - Read One Record - PHP CRUD Tutorial</title>
     <!-- Latest compiled and minified Bootstrap CSS -->
@@ -87,17 +94,28 @@
                     // creating new table row per record
                     echo "<tr>";
                     echo "<td>{$name}</td>";
-                    echo "<td>RM&nbsp{$price}</td>";
+                    $priceFormat = number_format($price, 2);
+                    echo "<td>RM&nbsp{$priceFormat}</td>";
                     echo "<td>{$Quantity}</td>";
-                    echo "<td>RM&nbsp$totalPrice</td>";
+                    $totalPriceFormat = number_format($totalPrice, 2);
+                    echo "<td><div class='div1'>RM&nbsp$totalPriceFormat</div></td>";
                 }
+                
             }
             ?>
 
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td><b>Total Amount</b></td>
-                    <td><?php echo"RM&nbsp $TotalAmount"?></td>
+                    <td>
+                        <div class="div1">
+                            <span>
+                                <?php 
+                                $totalAmountFormat = number_format($TotalAmount, 2);
+                                echo"RM&nbsp $totalAmountFormat"?>
+                            </span>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
