@@ -196,6 +196,8 @@ function validateDate($date, $format = 'Y-n-j')
                         mkdir($target_directory, 0777, true);
                     }
                 }
+
+                
                 // if $file_upload_error_messages is still empty
                 if (empty($file_upload_error_messages)) {
                     // it means there are no errors, so try to upload the file

@@ -82,7 +82,7 @@ function validateDate($date, $format = 'Y-n-j')
         // read current record's data
         try {
             // prepare select query
-            $query = "SELECT id, first_name, last_name, email, passw, birth_date, gender, status FROM customer WHERE id = ? ";
+            $query = "SELECT id, first_name, last_name, email, passw, birth_date, gender, status, image FROM customer WHERE id = ? ";
             $stmt = $con->prepare($query);
 
             // this is the first question mark
@@ -99,6 +99,7 @@ function validateDate($date, $format = 'Y-n-j')
             $last_name = $row['last_name'];
             $email = $row['email'];
             $passw = $row['passw'];
+            $image = $row['image'];
             $birth_date = $row['birth_date'];
             $gender = $row['gender'];
             $status = $row['status'];
@@ -188,14 +189,14 @@ function validateDate($date, $format = 'Y-n-j')
             }
 
             // new 'image' field
-            $image = !empty($_FILES["image"]["name"])
+            $newimage = !empty($_FILES["image"]["name"])
                 ? sha1_file($_FILES['image']['tmp_name']) . "-" . basename($_FILES["image"]["name"])
                 : "";
-            $image = htmlspecialchars(strip_tags($image));
-            if ($image) {
+            $newimage = htmlspecialchars(strip_tags($newimage));
+            if ($newimage) {
 
                 $target_directory = "uploads/";
-                $target_file = $target_directory . $image;
+                $target_file = $target_directory . $newimage;
                 $file_type = pathinfo($target_file, PATHINFO_EXTENSION);
 
                 // error message is empty
@@ -258,7 +259,7 @@ function validateDate($date, $format = 'Y-n-j')
             $stmt->bindParam(':last_name', $last_name);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':passw', $passw);
-            $stmt->bindParam(':image', $image);
+            $stmt->bindParam(':image', $newimage);
             $stmt->bindParam(':birth_date', $birth_date);
             $stmt->bindParam(':gender', $gender);
             $stmt->bindParam(':status', $status);
@@ -270,6 +271,10 @@ function validateDate($date, $format = 'Y-n-j')
             } else {
                 echo "<div class='alert alert-danger'><b>Unable to save record:</b><br>$msg</div>";
             }
+            if($image != ""){
+                unlink("uploads/".$image);
+            }
+            $image = $newimage;
         } ?>
 
 
@@ -298,7 +303,7 @@ function validateDate($date, $format = 'Y-n-j')
                 </tr>
                 <tr>
                     <td>Image</td>
-                    <td><input type='file' name='image' value="<?php echo $img; ?>" />
+                    <td><img src="uploads/<?php echo $image; ?>" width="100px" height="100px"><input type='file' name='image'/></td>
                 </tr>
                 <tr>
                     <td>Date of Birth </td>

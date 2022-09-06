@@ -10,7 +10,7 @@ try {
     $query = "DELETE FROM customer WHERE id = ?";
     $stmt = $con->prepare($query);
     $stmt->bindParam(1, $id);
-     
+    
     if($stmt->execute()){
         // redirect to read records page and
         // tell the user record was deleted

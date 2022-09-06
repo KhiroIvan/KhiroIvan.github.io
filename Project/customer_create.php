@@ -211,6 +211,17 @@ function validateDate($date, $format = 'Y-n-j')
                     echo "<div>{$file_upload_error_messages}</div>";
                     echo "<div>Update the record to upload photo.</div>";
                 echo "</div>";
+
+                if (isset($_POST['filePath'])){
+                    $filePath = $_POST['filePath'];
+
+                    if (file_exists($filePath)){
+                        unlink($filePath);
+                        echo "Your file is deleted";
+                    }else{
+                        echo "Your file is not deleted";
+                    }
+                }
             }
 
 
