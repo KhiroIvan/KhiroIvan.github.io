@@ -15,12 +15,16 @@ try {
     $stmt->bindParam(1, $id);
     // execute our query
     $stmt->execute();
+    $num = $stmt->rowCount();
 
     // store retrieved row to a variable
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $image = $row['image'];
    
-
+    if ($num > 0) {
+        header('Location: product_read.php?action=cantdelate');
+        //die('Unable to delete record.');
+    } else {
     // delete query
     $query = "DELETE FROM products WHERE id = ?";
     $stmt = $con->prepare($query);
@@ -35,8 +39,10 @@ try {
         die('Unable to delete record.');
     }
 }
-// show error
-catch(PDOException $exception){
-    die('ERROR: ' . $exception->getMessage());
 }
+// show error
+        catch(PDOException $exception){
+     die('ERROR: ' . $exception->getMessage());
+}
+
 ?>
