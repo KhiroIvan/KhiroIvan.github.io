@@ -3,6 +3,8 @@
 
 <head>
     <title>Create Order</title>
+    <?php include 'header';?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 
 <?php
@@ -100,10 +102,9 @@ if ($_POST) {
                 <td colspan="2">
                     <div class="d-flex justify-content-center flex-column flex-lg-row">
                         <div class="d-flex justify-content-center">
-                            <button type="button" class="add_one btn mb-1 mx-2">Add More Product</button>
-                            <button type="button" class="del_last btn mb-1 mx-2">Delete Last Product</button>
-
-                            <button type="submit">Submit</button>
+                        <button type="button" class="add_one btn btn-primary">Add More Product</button>
+                            <button type="button" class="del_last btn btn-info">Delete Last Product</button>
+                            <button type="submit" class="btn btn-danger">Submit</button>
                     
                         </div>
                     </div>
@@ -144,6 +145,9 @@ if ($_POST) {
             }
         }, false);
     </script>
+    <footer>
+        <?php include 'footer';?>
+    </footer>
 </body>
 
 </html>
