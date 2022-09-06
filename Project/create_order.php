@@ -31,7 +31,7 @@ if ($_POST) {
         $stmt->bindParam(':Quantity', $Quantity[$i]);
         $stmt->execute();
     }
-    header("Location: receipt.php?OrderID=$OrderID");
+    header("Location: order_read_one.php?OrderID=$OrderID");
 }
 ?>
 
