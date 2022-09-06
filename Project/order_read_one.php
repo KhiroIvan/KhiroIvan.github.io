@@ -80,7 +80,7 @@
                 echo "<th>Product Name</th>";
                 echo "<th>Single Price</th>";
                 echo "<th>Quantity</th>";
-                echo "<th>Total Price</th>";
+                echo "<th><div class='div1'>Total Price</div></th>";
                 echo "</tr>";
                 
 
@@ -112,7 +112,7 @@
                             <span>
                                 <?php 
                                 $totalAmountFormat = number_format($TotalAmount, 2);
-                                echo"RM&nbsp $totalAmountFormat"?>
+                                echo"RM&nbsp$totalAmountFormat"?>
                             </span>
                         </div>
                     </td>
