@@ -22,7 +22,7 @@ try {
     $image = $row['image'];
    
     if ($num > 0) {
-        header('Location: product_read.php?action=cantdelate');
+        header('Location: product_read.php?action=cantdelete');
         //die('Unable to delete record.');
     } else {
     // delete query

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <header>
@@ -7,9 +8,10 @@
     position: relative;
     width: 100%;
     height: auto;
+    text-align: center;
 }
 .dropbtn {
-  background-color: #990033;
+  background-color: #055099;
   color: white;
   padding: 10px;
   font-size: 16px;
@@ -26,6 +28,7 @@
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  text-align: center;
 }
 .dropdown-content a {
   color: black;
@@ -35,8 +38,14 @@
 }
 .dropdown-content a:hover {background-color: #ddd;}
 .dropdown:hover .dropdown-content {display: block;}
-.dropdown:hover .dropbtn {background-color: #b3003b;}
-.logo{padding: 5px;}
+.dropdown:hover .dropbtn {background-color: #06038D;}
+.logo{
+    
+    margin: auto;
+    height: auto;
+    position: absolute;
+    
+}
 .loginbtn {
     margin: auto;
     background-color: #ddd;
@@ -52,6 +61,10 @@
 </style>
 </header>
 <body>
+
+<div class="logo">
+<h1><a href="home.php"><img src="uploads/kisspng-windows-98-windows-95-microsoft-windows-7-vaporwave-5b46b3e1015810.1044725315313602250055.png" width="40px" height="40px" alt=""></a></h1>
+</div>
 
 <div class="menu">
 <div class="dropdown">
@@ -81,7 +94,11 @@
   </div>
 </div>
 
-<button class="loginbtn"><a href="customer_login.php">Login</a></button>
+<div>
+  
+<button class="loginbtn"><a href="logout.php">Log Out</a></button>
+
+</div>
 </div><!-- end menu -->
 
 

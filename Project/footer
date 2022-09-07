@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
+<style>
+.footer{
+    text-align:center;
+}
+</style>
 <body>
 
+<div class="footer">
 <p>Buy and sell!</p>
 <p>@TanIvan 2020</p>
+</div>
 
 </body>
 </html>

@@ -1,9 +1,16 @@
+<?php
+session_start();
+
+if(!isset($_SESSION["login"])){
+    header('Location: customer_login.php');
+}
+?>
 <!DOCTYPE HTML>
 <html>
 
 <head>
     <title>Create Order</title>
-    <?php include 'header';?>
+    <?php include 'header.php';?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 

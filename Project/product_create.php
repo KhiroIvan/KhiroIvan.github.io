@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if(!isset($_SESSION["login"])){
+    header('Location: customer_login.php');
+}
+?>
+<?php
 
 function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
 {
@@ -62,7 +69,7 @@ function validateDate($date, $format = 'Y-n-d')
     <title>PDO - Create a Record - PHP CRUD Tutorial</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <?php include 'header';?>
+    <?php include 'header.php';?>
 </head>
 
 <body>
