@@ -207,18 +207,13 @@ function validateDate($date, $format = 'Y-n-j')
                 if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
                     // it means photo was uploaded
                 }else{
-                    echo "<div class='alert alert-danger'>";
-                        echo "<div>Unable to upload photo.</div>";
-                        echo "<div>Update the record to upload photo.</div>";
-                    echo "</div>";
+                    $emptyMes = $emptyMes . "There is no photo.<br>";
+                    $save = false;
                 }
             }// if $file_upload_error_messages is NOT empty
             else{
-                // it means there are some errors, so show them to user
-                echo "<div class='alert alert-danger'>";
-                    echo "<div>{$file_upload_error_messages}</div>";
-                    echo "<div>Update the record to upload photo.</div>";
-                echo "</div>";
+                $emptyMes = $emptyMes . "There is no photo.<br>";
+                $save = false;
 
                 if (isset($_POST['filePath'])){
                     $filePath = $_POST['filePath'];

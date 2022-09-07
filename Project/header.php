@@ -6,7 +6,7 @@
 <style>
 .menu{
     position: relative;
-    width: 100%;
+    width: auto;
     height: auto;
     text-align: center;
 }
@@ -63,7 +63,7 @@
 <body>
 
 <div class="logo">
-<h1><a href="home.php"><img src="uploads/kisspng-windows-98-windows-95-microsoft-windows-7-vaporwave-5b46b3e1015810.1044725315313602250055.png" width="40px" height="40px" alt=""></a></h1>
+<h1><a href="homepage.php"><img src="uploads/kisspng-windows-98-windows-95-microsoft-windows-7-vaporwave-5b46b3e1015810.1044725315313602250055.png" width="40px" height="40px" alt=""></a></h1>
 </div>
 
 <div class="menu">

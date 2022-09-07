@@ -45,47 +45,61 @@ if ($_POST) {
 ?>
 
 <body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Create Order</h1>
+        </div>
     <form action="" method="post">
-        <?php
-        $query = "SELECT id, first_name, last_name FROM customer ORDER BY id DESC";
-        $stmt = $con->prepare($query);
-        $stmt->execute();
-
-        // this is how to get number of rows returned
-        $customer_num = $stmt->rowCount();
-        if ($customer_num > 0) {
-            echo '<select name="customer">';
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                extract($row);
-                echo "<option value='$id'>$first_name $last_name</option>";
-            }
-
-            echo '</select>';
-        }
-        ?>
         <table class="table">
+        <tr class="customer-row">
+                <td>Customer</td>
+                <td>
+                    <div class="row">
+                        <div class="col">
+                        <?php   
+                            $query = "SELECT id, first_name, last_name FROM customer ORDER BY id DESC";
+                            $stmt = $con->prepare($query);
+                            $stmt->execute();
+
+                            // this is how to get number of rows returned
+                            $customer_num = $stmt->rowCount();
+                            if($customer_num > 0){
+                                echo '<select name="customer">';
+                                    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                        extract($row);
+                                        echo "<option value='$id'>$first_name $last_name</option>";
+                                    }
+                                    
+                                echo '</select>';
+                            }     
+                        ?>
+                        </div>
+                        </div>
+                    </td>
+                </tr>
+                        
             <tr class="product-row">
                 <td>Product</td>
                 <td>
                     <div class="row">
                         <div class="col">
-                            <?php
+                        <?php   
                             $query = "SELECT id, name FROM products ORDER BY id DESC";
                             $stmt = $con->prepare($query);
                             $stmt->execute();
 
                             // this is how to get number of rows returned
                             $product_num = $stmt->rowCount();
-                            if ($product_num > 0) {
+                            if($product_num > 0){
                                 echo '<select name="product[]">';
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                    extract($row);
-                                    echo "<option value='$id'>$name</option>";
-                                }
-
+                                    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                        extract($row);
+                                        echo "<option value='$id'>$name</option>";
+                                    }
+                                    
                                 echo '</select>';
-                            }
-                            ?>
+                            }     
+                        ?>
                         </div>
                         <div class="col">
                             <select name="quantity[]">
@@ -105,36 +119,22 @@ if ($_POST) {
                     </div>
                 </td>
             </tr>
+            
             <tr>
                 <td colspan="2">
                     <div class="d-flex justify-content-center flex-column flex-lg-row">
                         <div class="d-flex justify-content-center">
-                        <button type="button" class="add_one btn btn-primary">Add More Product</button>
+                            <button type="button" class="add_one btn btn-primary">Add More Product</button>
                             <button type="button" class="del_last btn btn-info">Delete Last Product</button>
                             <button type="submit" class="btn btn-danger">Submit</button>
-                    
                         </div>
                     </div>
                 </td>
             </tr>
-
         </table>
-
     </form>
+    </div>
 
-    <?php
-
-    //if($_POST){
-    // $product = $_POST['product'];
-    //$quantity = $_POST['quantity'];
-
-    // for($i=0;$i<count($product);$i++){
-    //     echo $product[$i];
-    //     echo $quantity[$i];
-    //     echo "<br>";
-    //}
-    //}
-    ?>
 
     <script>
         document.addEventListener('click', function(event) {
@@ -152,9 +152,4 @@ if ($_POST) {
             }
         }, false);
     </script>
-    <footer>
-        <?php include 'footer';?>
-    </footer>
 </body>
-
-</html>

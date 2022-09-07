@@ -54,7 +54,7 @@ function dropdown($sday = "", $smonth = "", $syear = "", $name = "")
     echo "<br>";
 }
 
-function validateDate($date, $format = 'Y-n-d')
+function validateDate($date, $format = 'Y-n-j')
 {
     $d = DateTime::createFromFormat($format, $date);
     // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
@@ -117,20 +117,25 @@ function validateDate($date, $format = 'Y-n-d')
 
 
             $expiry_date = $_POST['expiry_date_year'] . "-" . $_POST['expiry_date_month'] . "-" . $_POST['expiry_date_day'];
-
+            $ManDate = date_create($manu_date);
+            $ExDate = date_create($expiry_date);
+            $x = date_diff($ManDate, $ExDate);
 
             if (validateDate($expiry_date) == false) {
                 $emptyMes = $emptyMes . "Expiry selected date does not exist<br>";
                 $save = false;
             }
 
-            $ManDate = date_create($manu_date);
-            $ExDate = date_create($expiry_date);
-            $x = date_diff($ManDate, $ExDate);
-
-            if ($x->format("%R%a") < 0) {
-                $emptyMes = $emptyMes . "Expiry date should not earlier than manufacture date.<br>";
-                $save = false;
+            if((int)($x->format("%m") > 1)){
+                if((int)($x->format("%R%a") <= 0)){
+                    $msg = $msg . "Expiry date should not earlier than manufacture date<br>";
+                    $save = false;
+                }
+            }else{
+                if ((int)($x->format("%m") < 1)){
+                    $msg = $msg . "Expiry date should earlier than manufacture one month<br>";
+                    $save = false;
+                }
             }
 
             if (isset($_POST['status'])) {
@@ -174,24 +179,19 @@ function validateDate($date, $format = 'Y-n-d')
                 }
             }
             // if $file_upload_error_messages is still empty
-            if (empty($file_upload_error_messages)) {
+            if(empty($file_upload_error_messages)){
                 // it means there are no errors, so try to upload the file
-                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                if(move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)){
                     // it means photo was uploaded
-                } else {
-                    echo "<div class='alert alert-danger'>";
-                    echo "<div>Unable to upload photo.</div>";
-                    echo "<div>Update the record to upload photo.</div>";
-                    echo "</div>";
+                }else{
+                    $emptyMes = $emptyMes . "There is no photo.<br>";
+                    $save = false;
                 }
-            } // if $file_upload_error_messages is NOT empty
-            else {
-                // it means there are some errors, so show them to user
-                echo "<div class='alert alert-danger'>";
-                echo "<div>{$file_upload_error_messages}</div>";
-                echo "<div>Update the record to upload photo.</div>";
-                echo "</div>";
-                
+            }// if $file_upload_error_messages is NOT empty
+            else{
+                $emptyMes = $emptyMes . "There is no photo.<br>";
+                $save = false;
+
                 if (isset($_POST['filePath'])){
                     $filePath = $_POST['filePath'];
 
@@ -260,7 +260,6 @@ function validateDate($date, $format = 'Y-n-d')
                 <tr>
                     <td>Photo</td>
                     <td><input type="file" name="image"/>
-                    <input type="submit" name="submit" value="Delete File"></td>
                 </tr>
 
                 <tr>
