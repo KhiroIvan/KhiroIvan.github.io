@@ -7,9 +7,10 @@ try {
     $id = isset($_GET['OrderID']) ? $_GET['OrderID'] :  die('ERROR: Record ID not found.');
 
     // delete query
-    $query = "DELETE orders , orderdetails FROM orders INNER JOIN orderdetails ON orders.OrderID = orderdetails.OrderID WHERE orders.OrderID = ? and orderdetails.OrderID = 1";
+    $query = "DELETE orders , orderdetails FROM orders INNER JOIN orderdetails ON orders.OrderID = orderdetails.OrderID WHERE orders.OrderID = ? and orderdetails.OrderID = ?";
     $stmt = $con->prepare($query);
     $stmt->bindParam(1, $id);
+    $stmt->bindParam(2, $id);
      
     if($stmt->execute()){
         // redirect to read records page and

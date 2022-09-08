@@ -36,14 +36,12 @@ if(!isset($_SESSION["login"])){
         // check if form was submitted
         
         if ($_POST) {
-            //echo "post";
-            // posted values
-            $orderDetailsID  = $_POST['OrderDetailsID'];
-            $product_ID  = $_POST['ProductID'];
+            
+            $orderDetailsID = $_POST['OrderDetailsID'];
+            $product_ID = $_POST['ProductID'];
             $quantity = $_POST['Quantity'];
             
-
-            //print_r( $product_id) ;
+            //print_r($product_ID) ;
 
             for ($i = 0; $i < count($product_ID); $i++) {
                 try {
@@ -55,15 +53,15 @@ if(!isset($_SESSION["login"])){
                     $stmt = $con->prepare($query);
 
                     // bind the parameters
-                    $stmt->bindParam(':OrderDetailsID', $OrderDetailsID[$i]);
-                    $stmt->bindParam(':ProductID', $ProductID[$i]);
-                    $stmt->bindParam(':Quantity', $Quantity[$i]);
+                    $stmt->bindParam(':OrderDetailsID', $orderDetailsID[$i]);
+                    $stmt->bindParam(':ProductID', $product_ID[$i]);
+                    $stmt->bindParam(':Quantity', $quantity[$i]);
 
                     // Execute the query
                     if ($stmt->execute()) {
-                        if ($i + 1 == count($product_id)) {
+                        if ($i + 1 == count($product_ID)) {
                             ob_end_clean();
-                            //$_SESSION['success_update'] = "<div class='alert alert-success text-white'>Record was Updated.</div>";
+                            //echo "<div class='alert alert-success text-white'>Record was Updated.</div>";
                             header('Location: order_read.php?action=updated');
                         }
                     } else {
@@ -81,7 +79,7 @@ if(!isset($_SESSION["login"])){
 
             try {
                 // prepare select query
-                $query = "SELECT * FROM orderdetails  WHERE OrderID  = ?";
+                $query = "SELECT * FROM orderdetails WHERE OrderID  = ?";
                 $stmt = $con->prepare($query);
 
                 // this is the first question mark
@@ -111,7 +109,7 @@ if(!isset($_SESSION["login"])){
 
 
         <!--we have our html form here where new record information can be updated-->
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?orderID={$OrderID}"); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?OrderID={$orderID}"); ?>" method="post" enctype="multipart/form-data">
             <table class='table table-hover table-responsive table-bordered'>
 
                 <?php
@@ -127,12 +125,12 @@ if(!isset($_SESSION["login"])){
                             <td class="border border-3 p-4">Select Product</td>
                             <td>
                             <div class="col">';
-                        echo "<select class='form_select' name='product_id[]' >";
+                        echo "<select class='form_select' name='ProductID[]' >";
                         echo '<option selected>Product</option>';
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             extract($row);
 
-                            if ($product_id[$x] == $id) {
+                            if ($product_ID[$x] == $id) {
                                 echo "<option value='" . $id . "' selected >" . $name . "</option>";
                             } else {
                                 echo "<option value='" . $id . "' >" . $name . "</option>";
@@ -141,8 +139,8 @@ if(!isset($_SESSION["login"])){
                         echo "</select>
                         </div>
                             <div class='input-group input-group-outline my-2'>
-                            <input type='number' name='quantity[]' class='form-control' value='" . $quantity[$x] . "'/>
-                            <input type='hidden' name='order_details_id[]' value='" . $orderDetailsID[$x]. "'/></div>";
+                            <input type='number' name='Quantity[]' class='form-control' value='" . $quantity[$x] . "'/>
+                            <input type='hidden' name='OrderDetailsID[]' value='" . $orderDetailsID[$x]. "'/></div>";
                     }
                     // show error
                     catch (PDOException $exception) {
