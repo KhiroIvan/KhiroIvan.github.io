@@ -162,15 +162,18 @@ function validateDate($date, $format = 'Y-n-j')
                 // make sure certain file types are allowed
                 $allowed_file_types = array("jpg", "jpeg", "png", "gif");
                 if (!in_array($file_type, $allowed_file_types)) {
-                    $file_upload_error_messages .= "<div>Only JPG, JPEG, PNG, GIF files are allowed.</div>";
+                    $msg = $msg . "Only JPG, JPEG, PNG, GIF files are allowed.<br>";
+                    $save = false;
                 }
                 // make sure file does not exist
                 if (file_exists($target_file)) {
-                    $file_upload_error_messages .= "<div>Image already exists. Try to change file name.</div>";
+                    $msg = $msg . "Image already exists. Try to change file name.<br>";
+                    $save = false;
                 }
                 // make sure submitted file is not too large, can't be larger than 1MB
                 if ($_FILES['image']['size'] > 1024000) {
-                    $file_upload_error_messages .= "<div>Image must be less than 1 MB in size.</div>";
+                    $msg = $msg . "Image must be less than 1 MB in size.<br>";
+                    $save = false;
                 }
                 // make sure the 'uploads' folder exists
                 // if not, create it
